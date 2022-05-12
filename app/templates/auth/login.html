@@ -1,0 +1,33 @@
+{% with messages = get_flashed_messages() %}
+{% if messages %}
+    <div class="notification is-danger">
+        {{ messages[0] }}</a>.
+    </div>
+{% endif %}
+{% endwith %}
+<div class="column is-4 is-offset-4">
+    <h3 class="title">Авторизация</h3>
+    <div>
+        <form method="POST" action="/auth/login">
+            <div class="field">
+                <div class="control">
+                    <input class="input" type="email" name="email" placeholder="Электронная почта" autofocus="">
+                </div>
+            </div>
+
+            <div class="field">
+                <div class="control">
+                    <input class="input" type="password" name="password" placeholder="Пароль">
+                </div>
+            </div>
+            <div class="field">
+                <label class="checkbox">
+                    <input type="checkbox" name="remember"> Запомнить меня
+                </label>
+            </div>
+            <button class="button">Войти</button>
+        </form>
+    </div>
+</div>
+<br>
+<a href="{{ url_for('auth.signup') }}">Регистрация</a>

@@ -1,0 +1,23 @@
+<h1 class="title">MusicTheory</h1>
+
+{% if current_user.is_authenticated %}
+    <a href="{{ url_for('views.profile') }}">
+        Личный кабинет
+    </a>
+{% endif %}
+<br>
+{% if not current_user.is_authenticated %}
+    <a href="{{ url_for('auth.login') }}">
+        Авторизация
+    </a>
+    <br>
+    <a href="{{ url_for('auth.signup') }}">
+        Регистрация
+    </a>
+{% endif %}
+
+{% if current_user.is_authenticated %}
+    <a href="{{ url_for('auth.logout') }}">
+        Выйти из аккаунта
+    </a>
+{% endif %}
