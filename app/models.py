@@ -17,6 +17,7 @@ def get_id(objects, id_name):
         return max_item[id_name] + 1
     return 0
 
+
 class User(db.Document, UserMixin):
     user_id = db.IntField(required=True, unique=True)
     email = db.EmailField(required=True, unique=True)
@@ -54,12 +55,11 @@ class Test(db.Document):
     test_id = db.IntField(required=True, unique=True)
     name = db.StringField()
     section = db.ListField(db.StringField())
-    question_array = db.ListField(db.ReferenceField('Question'))
-
+    question_array = db.ListField(db.ReferenceField("Question"))
 
 
 class Result(db.Document):
-    result_id =  db.IntField(required=True, unique=True)
+    result_id = db.IntField(required=True, unique=True)
 
     user_id = db.IntField()
     test_id = db.IntField()
@@ -74,9 +74,3 @@ class Result(db.Document):
 
     incorrect_count = db.IntField()
     total_count = db.IntField()
-
-
-
-
-
-
