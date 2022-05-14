@@ -15,6 +15,7 @@ from flask_jwt_extended import (
     jwt_required,
     JWTManager,
 )
+from flask_login import current_user
 
 from app.models import User, get_id
 
@@ -65,3 +66,13 @@ def signup():
 
     access_token = create_access_token(identity=email)
     return jsonify(result="OK", access_token=access_token)
+
+
+
+@api.route("/user", methods=["GET"])
+@jwt_required()
+def user():
+    email_user = get_jwt_identity()
+    current_user = User.objects(email=email_user).first()
+
+    return jsonify(email=current_user.email, first_name=current_user.first_name, last_name=current_user.last_name, role=current_user.role), 200
