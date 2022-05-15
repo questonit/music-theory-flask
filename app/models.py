@@ -56,6 +56,7 @@ class Test(db.Document):
     name = db.StringField()
     section = db.ListField(db.StringField())
     question_array = db.ListField(db.ReferenceField("Question"))
+    teacher_id = db.IntField()
 
 
 class Result(db.Document):
