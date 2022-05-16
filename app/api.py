@@ -71,7 +71,6 @@ def signup():
     return jsonify(result="OK", access_token=access_token)
 
 
-
 @api.route("/user", methods=["GET"])
 @jwt_required()
 def user():
@@ -83,34 +82,73 @@ def user():
         "email": current_user.email,
         "first_name": current_user.first_name,
         "last_name": current_user.last_name,
-        "role": current_user.role
+        "role": current_user.role,
     }
 
-    return jsonify(result='OK', data=data), 200
+    return jsonify(result="OK", data=data)
+
+
+@api.route("/users", methods=["GET"])
+@jwt_required()
+def users():
+    users = json.loads(User.objects.to_json())
+    return jsonify(result="OK", data=users)
 
 
 @api.route("/test", methods=["GET", "POST"])
 @jwt_required()
 def test():
     if request.method == "POST":
-        name = request.json.get('name')
-        section = request.json.get('section')
-        question_array = request.json.get('question_array')
+        name = request.json.get("name")
+        section = request.json.get("section")
+        question_array = request.json.get("question_array")
 
-        teacher_id = request.json.get('teacher_id')
+        teacher_id = request.json.get("teacher_id")
+        # редактирование
+        tid = request.json.get("test_id")
 
+        if tid:
+            if teacher_id is not None and not User.objects(user_id=teacher_id).first():
+                return jsonify(result="ERROR", error="Учитель не найден")
+
+            if test := Test.objects(test_id=tid).first():
+                if name is not None:
+                    test.name = name
+                if section is not None:
+                    test.section = section
+                if question_array is not None:
+                    test.question_array = question_array
+                if teacher_id is not None:
+                    test.teacher_id = teacher_id
+
+                try:
+                    test.save()
+                except ValidationError:
+                    return jsonify(result="ERROR", error="Ошибка валидации")
+
+                return jsonify(result="OK", test_id=tid)
+
+            return jsonify(result="ERROR", error="Тест не найден")
+
+        # добавление
         if User.objects(user_id=teacher_id).first():
-            test_id = get_id(Test.objects, 'test_id')
+            test_id = get_id(Test.objects, "test_id")
             try:
-                new_test = Test(test_id=test_id, name=name, section=section, question_array=question_array, teacher_id=teacher_id)
-                
+                new_test = Test(
+                    test_id=test_id,
+                    name=name,
+                    section=section,
+                    question_array=question_array,
+                    teacher_id=teacher_id,
+                )
+
                 new_test.save()
             except ValidationError:
-                 return jsonify(result="ERROR", error="Ошибка валидации")
-            
+                return jsonify(result="ERROR", error="Ошибка валидации")
+
             return jsonify(result="OK", test_id=test_id)
-        
-        return jsonify(result="ERROR", error='Учитель не найден')
+
+        return jsonify(result="ERROR", error="Учитель не найден")
 
     # GET
     # по id
@@ -139,3 +177,13 @@ def test():
     tests = Test.objects
     return jsonify(result="OK", data=json.loads(tests.to_json()))
 
+@api.route("/test_delete", methods=["GET", "POST"])
+@jwt_required()
+def test_delete():
+    test_id = request.json.get("test_id")
+
+    if test := Test.objects(test_id=test_id).first():
+        test.delete()
+        return jsonify(result="OK")
+    
+    return jsonify(result="ERROR", error="Тест не найден")

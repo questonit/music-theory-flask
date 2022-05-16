@@ -10,9 +10,10 @@ views = Blueprint("views", __name__, url_prefix="/")
 def index():
     return render_template("views/index.html")
 
+
 @views.route("/config")
 def config():
-    return str(current_app.config['DEBUG']), current_app.config['JWT_SECRET_KEY']
+    return str(current_app.config["DEBUG"]), current_app.config["JWT_SECRET_KEY"]
 
 
 @views.route("/profile")

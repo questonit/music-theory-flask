@@ -14,15 +14,15 @@ class BaseConfig:
 
 
 class DevelopementConfig(BaseConfig):
-    ENV = 'development'
+    ENV = "development"
     DEBUG = True
 
 
 class TestingConfig(BaseConfig):
-    ENV = 'testing'
+    ENV = "testing"
     DEBUG = True
 
 
 class ProductionConfig(BaseConfig):
-    ENV = 'production'
+    ENV = "production"
     DEBUG = False
