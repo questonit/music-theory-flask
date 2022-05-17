@@ -1,33 +1,25 @@
-{% with messages = get_flashed_messages() %}
-{% if messages %}
-    <div class="notification is-danger">
-        {{ messages[0] }}</a>.
-    </div>
-{% endif %}
-{% endwith %}
-<div class="column is-4 is-offset-4">
-    <h3 class="title">Авторизация</h3>
-    <div>
-        <form method="POST" action="/auth/login">
-            <div class="field">
-                <div class="control">
-                    <input class="input" type="email" name="email" placeholder="Электронная почта" autofocus="">
-                </div>
-            </div>
+{% extends "base.html" %}
 
-            <div class="field">
-                <div class="control">
-                    <input class="input" type="password" name="password" placeholder="Пароль">
-                </div>
-            </div>
-            <div class="field">
-                <label class="checkbox">
-                    <input type="checkbox" name="remember"> Запомнить меня
-                </label>
-            </div>
-            <button class="button">Войти</button>
-        </form>
-    </div>
-</div>
-<br>
-<a href="{{ url_for('auth.signup') }}">Регистрация</a>
+{% block app_content %}
+<main class="text-center form-signin">
+    <form class="form-signin" method="POST" action="/auth/login">
+        <h1 class="h3 mb-3 fw-normal">Авторизация</h1>
+
+        <div class="form-floating">
+            <input type="email" class="form-control" id="email" name="email" placeholder="name@example.com">
+            <label for="email">Email</label>
+        </div>
+        <div class="form-floating">
+            <input type="password" class="form-control" id="password" name="password" placeholder="password">
+            <label for="password">Пароль</label>
+        </div>
+
+        <div class="checkbox mb-3">
+            <label>
+                <input type="checkbox" value="remember"> Запомнить меня
+            </label>
+        </div>
+        <button class="w-100 btn btn-lg btn-orange" type="submit">Войти</button>
+    </form>
+</main>
+{% endblock %}

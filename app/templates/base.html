@@ -1,0 +1,51 @@
+{% extends 'base_bootstrap.html' %}
+
+{% block title %}
+{% if title %}{{ title }} - MusicTheory{% else %}MusicTheory{% endif %}
+{% endblock %}
+
+{% block navbar %}
+<header class="p-3 text-white" style="background-color: #FB8C5C">
+    <div class="container">
+        <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
+            <a class="navbar-brand text-white" href="{{ url_for('views.index') }}">MusicTheory</a>
+
+            <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
+                <li><a href="{{ url_for('views.index') }}" class="nav-link px-2 text-white">Главная</a></li>
+                <li><a href="{{ url_for('views.profile') }}" class="nav-link px-2 text-white">Профиль</a></li>
+
+            </ul>
+
+            <!-- <form class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3">
+                <input type="search" class="form-control form-control-dark" placeholder="Search..." aria-label="Search">
+            </form> -->
+
+            <div class="text-end">
+                {% if current_user.is_anonymous %}
+                <a href="{{ url_for('auth.login') }}" role="button" class="btn btn-outline-navy me-2">Войти</a>
+                <a href="{{ url_for('auth.signup') }}" role="button" class="btn btn-navy">Регистрация</a>
+                {% else %}
+                <a href="{{ url_for('views.profile') }}" role="button" class="btn btn-outline-navy me-2">Личный
+                    кабинет</a>
+                <a href="{{ url_for('auth.logout') }}" role="button" class="btn btn-navy">Выйти</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</header>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+    {% for message in messages %}
+    <div class="alert alert-info" role="alert">{{ message }}</div>
+    {% endfor %}
+    {% endif %}
+    {% endwith %}
+
+    {# содержимое приложения которое должно быть предоставлено в блоке app_content #}
+    {% block app_content %}{% endblock %}
+</div>
+{% endblock %}

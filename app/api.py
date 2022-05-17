@@ -177,6 +177,7 @@ def test():
     tests = Test.objects
     return jsonify(result="OK", data=json.loads(tests.to_json()))
 
+
 @api.route("/test_delete", methods=["GET", "POST"])
 @jwt_required()
 def test_delete():
@@ -185,5 +186,5 @@ def test_delete():
     if test := Test.objects(test_id=test_id).first():
         test.delete()
         return jsonify(result="OK")
-    
+
     return jsonify(result="ERROR", error="Тест не найден")

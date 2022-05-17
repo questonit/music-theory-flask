@@ -1,3 +1,6 @@
+{% extends "base.html" %}
+
+{% block app_content %}
 <h1 class="title">
     Добро пожаловать, {{ name }}
 </h1>
@@ -5,3 +8,4 @@
 <a href="{{ url_for('views.index') }}">На главную</a>
 <br>
 <a href="{{ url_for('auth.logout') }}">Выйти из аккаунта</a>
+{% endblock %}
