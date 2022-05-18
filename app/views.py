@@ -1,5 +1,3 @@
-import email
-from turtle import title
 from flask import current_app, Blueprint, render_template, request
 from flask_login import current_user, login_required
 from app.models import User
