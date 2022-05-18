@@ -96,7 +96,7 @@ def signup():
             email=email,
             first_name=first_name,
             last_name=last_name,
-            role=role,
+            role=role if role == "student" else "teacher_w",
         )
         new_user.set_password(password=password)
         new_user.save()
@@ -113,3 +113,18 @@ def signup():
 def logout():
     logout_user()
     return redirect(url_for("views.index"))
+
+
+@auth.route("/accept-teacher", methods=["POST"])
+@login_required
+def accept_teacher():
+    if current_user.role != "admin":
+        return render_template("views/forbid.html", title="Ошибка"), 403
+
+    user_id = request.form.get("user_id")
+    teacher = User.objects(user_id=user_id).first()
+
+    teacher.role = "teacher"
+    teacher.save()
+    flash("Роль подтверждена")
+    return redirect(url_for("views.admin_users"))

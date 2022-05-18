@@ -12,8 +12,14 @@
 
             <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
                 <li><a href="{{ url_for('views.index') }}" class="nav-link px-2 text-white">Главная</a></li>
-                <li><a href="{{ url_for('views.profile') }}" class="nav-link px-2 text-white">Профиль</a></li>
 
+                {% if current_user.role == 'admin' %}
+                <li><a href="{{ url_for('views.admin_users') }}" class="nav-link px-2 text-white">Пользователи</a></li>
+                {% elif current_user.role == 'teacher' %}
+                <li><a href="{{ url_for('views.teacher_tests') }}" class="nav-link px-2 text-white">Тесты</a></li>
+                {% elif current_user.role == 'student' %}
+                <li><a href="{{ url_for('views.student_statistics') }}" class="nav-link px-2 text-white">Статистика</a></li>
+                {% endif %}
             </ul>
 
             <!-- <form class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3">

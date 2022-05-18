@@ -1,0 +1,8 @@
+{% extends "base.html" %}
+
+{% block app_content %}
+<main class="text-center position-absolute top-50 start-50 translate-middle">
+    <h1>Доступ запрещен!</h1>
+    <a href="{{ url_for('views.index') }}" role="button" class="btn btn-lg btn-orange">На главную</a>
+</main>
+{% endblock %}
