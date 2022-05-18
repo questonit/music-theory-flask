@@ -55,7 +55,7 @@ class Test(db.Document):
     test_id = db.IntField(required=True, unique=True)
     name = db.StringField()
     section = db.ListField(db.StringField())
-    question_array = db.ListField(db.ReferenceField("Question"))
+    question_array = db.ListField(db.DictField())
     teacher_id = db.IntField()
 
 
@@ -65,7 +65,7 @@ class Result(db.Document):
     user_id = db.IntField()
     test_id = db.IntField()
 
-    answer_wrong_array = db.ListField(db.DictField)
+    answer_wrong_array = db.ListField(db.DictField())
     """
     {
         question_text: string

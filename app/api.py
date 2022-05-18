@@ -19,7 +19,7 @@ from flask_login import current_user
 from mongoengine.errors import ValidationError
 import json
 
-from app.models import Test, User, get_id
+from app.models import Test, User, Result, get_id
 
 
 api = Blueprint("api", __name__, url_prefix="/api")
@@ -96,7 +96,7 @@ def users():
 
 
 @api.route("/test", methods=["GET", "POST"])
-@jwt_required()
+# @jwt_required()
 def test():
     if request.method == "POST":
         name = request.json.get("name")
@@ -121,6 +121,8 @@ def test():
                 if teacher_id is not None:
                     test.teacher_id = teacher_id
 
+                print(question_array)
+                print(test.question_array)
                 try:
                     test.save()
                 except ValidationError:
@@ -178,7 +180,7 @@ def test():
     return jsonify(result="OK", data=json.loads(tests.to_json()))
 
 
-@api.route("/test_delete", methods=["GET", "POST"])
+@api.route("/test_delete", methods=["POST"])
 @jwt_required()
 def test_delete():
     test_id = request.json.get("test_id")
@@ -188,3 +190,71 @@ def test_delete():
         return jsonify(result="OK")
 
     return jsonify(result="ERROR", error="Тест не найден")
+
+@api.route("/result", methods=["GET", "POST"])
+@jwt_required()
+def result():
+    if request.method == "POST":
+        test_id = request.json.get("test_id")
+        user_id = request.json.get("user_id")
+        answer_wrong_array= request.json.get("answer_wrong_array")
+        incorrect_count = request.json.get("incorrect_count")
+        total_count = request.json.get("total_count")
+
+        print(request.json)
+        if Test.objects(test_id=test_id).first() and User.objects(user_id=user_id).first():
+            result_id = get_id(Result.objects,'result_id')
+            try:
+                new_result = Result(
+                    result_id=result_id,
+                    test_id=test_id,
+                    user_id=user_id,
+                    answer_wrong_array=answer_wrong_array,
+                    incorrect_count=incorrect_count,
+                    total_count=total_count,
+                )
+
+                new_result.save()
+            except ValidationError:
+                return jsonify(result="ERROR", error="Ошибка валидации")
+
+            return jsonify(result="OK", result_id=result_id)
+
+        return jsonify(result="ERROR", error="Учитель или тест не найден")
+
+    result_id = request.args.get("result_id")
+
+    if result_id:
+        results = Result.objects(result_id=result_id)
+
+        if results:
+            return jsonify(result="OK", data=json.loads(results.to_json()))
+        else:
+            return jsonify(result="ERROR", error="Результат не найден")
+
+    # по студенту
+    user_id = request.args.get("user_id")
+
+    if user_id:
+        results = Result.objects(user_id=user_id)
+
+        if results:
+            return jsonify(result="OK", data=json.loads(results.to_json()))
+        else:
+            return jsonify(result="ERROR", error="Результаты не найдены")
+
+    # все тесты
+    results = Result.objects
+    return jsonify(result="OK", data=json.loads(results.to_json()))
+
+
+@api.route("/result_delete", methods=["POST"])
+@jwt_required()
+def result_delete():
+    result_id = request.json.get("result_id")
+
+    if result := Result.objects(result_id=result_id).first():
+        result.delete()
+        return jsonify(result="OK")
+
+    return jsonify(result="ERROR", error="Результат не найден")
