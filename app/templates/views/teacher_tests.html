@@ -1,6 +1,12 @@
 {% extends "base.html" %}
 
 {% block app_content %}
+<h3 class="h3 mt-3 mb-3 fw-normal text-center">Ваши тесты</h3>
 
+<div class="list-group">
+    {%for test_id, name in tests %}
+    <a href="{{ url_for('views.test') }}?id={{ test_id }}" class="link-test list-group-item list-group-item-action">{{ name }}</a>
+    {% endfor %}
+</div>
 
 {% endblock %}

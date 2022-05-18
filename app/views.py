@@ -1,6 +1,6 @@
 from flask import current_app, Blueprint, render_template, request
 from flask_login import current_user, login_required
-from app.models import User
+from app.models import Test, User
 
 views = Blueprint("views", __name__, url_prefix="/")
 
@@ -43,7 +43,19 @@ def teacher_tests():
 
     tests = []
 
+    for test in Test.objects(teacher_id=current_user.user_id):
+        tests.append((test.test_id, test.name))
+
     return render_template("views/teacher_tests.html", tests=tests)
+
+
+@views.route("/tests/test")
+@login_required
+def test():
+    test_id = request.args.get("id")
+    test = Test.objects(test_id=test_id).first()
+
+    return render_template("views/test.html", test=test)
 
 
 @views.route("/student_statistics")

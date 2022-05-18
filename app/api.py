@@ -96,7 +96,7 @@ def users():
 
 
 @api.route("/test", methods=["GET", "POST"])
-# @jwt_required()
+@jwt_required()
 def test():
     if request.method == "POST":
         name = request.json.get("name")
@@ -121,8 +121,6 @@ def test():
                 if teacher_id is not None:
                     test.teacher_id = teacher_id
 
-                print(question_array)
-                print(test.question_array)
                 try:
                     test.save()
                 except ValidationError:
@@ -191,19 +189,23 @@ def test_delete():
 
     return jsonify(result="ERROR", error="Тест не найден")
 
+
 @api.route("/result", methods=["GET", "POST"])
 @jwt_required()
 def result():
     if request.method == "POST":
         test_id = request.json.get("test_id")
         user_id = request.json.get("user_id")
-        answer_wrong_array= request.json.get("answer_wrong_array")
+        answer_wrong_array = request.json.get("answer_wrong_array")
         incorrect_count = request.json.get("incorrect_count")
         total_count = request.json.get("total_count")
 
         print(request.json)
-        if Test.objects(test_id=test_id).first() and User.objects(user_id=user_id).first():
-            result_id = get_id(Result.objects,'result_id')
+        if (
+            Test.objects(test_id=test_id).first()
+            and User.objects(user_id=user_id).first()
+        ):
+            result_id = get_id(Result.objects, "result_id")
             try:
                 new_result = Result(
                     result_id=result_id,
