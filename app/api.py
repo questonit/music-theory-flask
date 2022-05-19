@@ -260,3 +260,52 @@ def result_delete():
         return jsonify(result="OK")
 
     return jsonify(result="ERROR", error="Результат не найден")
+
+
+@api.route("/add_question", methods=["POST"])
+def add_question():
+    data = {}
+    answers = []
+    answers_false = []
+    for el in request.json:
+        data[el['name']] = el['value']
+
+
+    for key, value in data.items():
+        if key.startswith('answer') and value:
+            if data.get(f"ch{key}"):
+                answers.append(value)
+            else:
+                answers_false.append(value)
+    
+    count= len(answers)
+    answers.extend(answers_false)
+
+    if data['question_text'] == '' or len(answers) == 0 or count == 0:
+        return jsonify(result="ERROR"), 400
+
+    question = {
+        "question_text": data['question_text'],
+        "attachment_url": data['attachment_url'],
+        "displayed_elements": [],
+        "answer_array": answers,
+        "ui_type": "stave",
+        "generation_seed": {"count": count}
+    }
+
+    test_id = int(data['test_id'])
+    question_id = int(data['question_id'])
+
+    test = Test.objects(test_id=test_id).first()
+
+    question_array = test.question_array
+    if len(question_array) <= question_id:
+        question_array.append(question)
+    else: 
+        question_array[question_id] = question
+
+    test.question_array = question_array
+    test.save()
+    
+    return jsonify(result="OK"), 200
+

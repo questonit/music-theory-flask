@@ -55,7 +55,7 @@ def test():
     test_id = request.args.get("id")
     test = Test.objects(test_id=test_id).first()
 
-    return render_template("views/test.html", test=test)
+    return render_template("views/test.html", test=test, count_questions=len(test.question_array))
 
 
 @views.route("/student_statistics")
@@ -67,3 +67,4 @@ def student_statistics():
     results = []
 
     return render_template("views/student_statistics.html", results=results)
+
