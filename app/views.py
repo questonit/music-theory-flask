@@ -116,7 +116,7 @@ def student_statistics():
 
     number = 0
 
-    for result in Result.objects:
+    for result in Result.objects(user_id=current_user.user_id):
         number += 1
         test_name = Test.objects(test_id=result.test_id).first().name
         t_count = result.total_count
