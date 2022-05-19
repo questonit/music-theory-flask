@@ -1,11 +1,35 @@
 {% extends "base.html" %}
 
 {% block app_content %}
-<h1 class="title">
-    Добро пожаловать, {{ name }}
-</h1>
+<div class="container d-flex flex-column align-items-center questions">
+    <h3 class="h3 mt-3 mb-3 fw-normal text-center">Личный кабинет</h3>
 
-<a href="{{ url_for('views.index') }}">На главную</a>
-<br>
-<a href="{{ url_for('auth.logout') }}">Выйти из аккаунта</a>
-{% endblock %}
+    <div class="form-question">
+        <form class="row g-3" method="POST" action="/profile">
+            <div class="col-md-6">
+                <label for="last_name" class="form-label">Фамилия</label>
+                <input type="text" class="form-control" name="last_name" id="last_name"
+                    value="{{current_user.last_name}}">
+            </div>
+            <div class="col-md-6">
+                <label for="first_name" class="form-label">Имя</label>
+                <input type="text" class="form-control" name="first_name" id="first_name"
+                    value="{{current_user.first_name}}">
+            </div>
+            <div class="col-12">
+                <label for="email" class="form-label">Email</label>
+                <input type="email" class="form-control" name="email" id="email" value="{{current_user.email}}">
+            </div>
+            <div class="col-12">
+                <label for="last_pass" class="form-label">Старый пароль</label>
+                <input type="password" class="form-control" name="last_pass" id="last_pass">
+            </div>
+            <div class="col-12">
+                <label for="new_pass" class="form-label">Новый пароль</label>
+                <input type="password" class="form-control" name="new_pass" id="new_pass">
+            </div>
+            <div class="col-12">
+                <button type="submit" class="btn btn-orange">Обновить данные</button>
+            </div>
+    </div>
+    {% endblock %}

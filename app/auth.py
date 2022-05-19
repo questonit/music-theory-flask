@@ -1,4 +1,3 @@
-import email
 import re
 from flask_login import (
     LoginManager,
@@ -18,7 +17,6 @@ from flask import (
     url_for,
 )
 
-from app import views
 from app.models import User, get_id
 
 auth = Blueprint("auth", __name__, url_prefix="/auth")

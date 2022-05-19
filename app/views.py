@@ -1,5 +1,15 @@
-from flask import current_app, Blueprint, render_template, request
+from flask import (
+    current_app,
+    Blueprint,
+    flash,
+    redirect,
+    render_template,
+    request,
+    url_for,
+)
 from flask_login import current_user, login_required
+from mongoengine.errors import NotUniqueError
+from app.auth import check_email
 from app.models import Test, User
 
 views = Blueprint("views", __name__, url_prefix="/")
@@ -10,13 +20,46 @@ def index():
     return render_template("views/index.html")
 
 
-@views.route("/profile")
+@views.route("/profile", methods=["GET", "POST"])
 @login_required
 def profile():
+    if request.method == "POST":
+        email = request.form.get("email")
+        new_password = request.form.get("new_pass")
+        last_password = request.form.get("last_pass")
+        first_name = request.form.get("first_name")
+        last_name = request.form.get("last_name")
 
-    return render_template(
-        "views/profile.html", name=f"{current_user.first_name} {current_user.last_name}"
-    )
+        user = current_user
+
+        if email and not check_email(email):
+            flash("Неверный формат email")
+            return redirect(url_for("views.profile"))
+
+        if new_password and not user.check_password(last_password):
+            flash("Неверный старый пароль")
+            return redirect(url_for("views.profile"))
+
+        if email:
+            user.email = email
+
+        if new_password:
+            user.set_password(new_password)
+
+        if first_name:
+            user.first_name = first_name
+
+        if last_name:
+            user.last_name = last_name
+        try:
+            user.save()
+        except NotUniqueError:
+            flash("Email уже используется")
+            return redirect(url_for("views.profile"))
+
+        flash("Данные успешно обновленны")
+
+    return render_template("views/profile.html")
 
 
 @views.route("/users")
@@ -55,7 +98,9 @@ def test():
     test_id = request.args.get("id")
     test = Test.objects(test_id=test_id).first()
 
-    return render_template("views/test.html", test=test, count_questions=len(test.question_array))
+    return render_template(
+        "views/test.html", test=test, count_questions=len(test.question_array)
+    )
 
 
 @views.route("/student_statistics")
@@ -67,4 +112,3 @@ def student_statistics():
     results = []
 
     return render_template("views/student_statistics.html", results=results)
-
