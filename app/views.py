@@ -10,7 +10,7 @@ from flask import (
 from flask_login import current_user, login_required
 from mongoengine.errors import NotUniqueError
 from app.auth import check_email
-from app.models import Test, User
+from app.models import Result, Test, User
 
 views = Blueprint("views", __name__, url_prefix="/")
 
@@ -59,7 +59,7 @@ def profile():
 
         flash("Данные успешно обновленны")
 
-    return render_template("views/profile.html")
+    return render_template("views/profile.html", title="Личный кабинет")
 
 
 @views.route("/users")
@@ -75,7 +75,7 @@ def admin_users():
         number += 1
         users.append((number, user))
 
-    return render_template("views/admin_users.html", users=users)
+    return render_template("views/admin_users.html", users=users, title="Пользователи")
 
 
 @views.route("/tests")
@@ -89,7 +89,7 @@ def teacher_tests():
     for test in Test.objects(teacher_id=current_user.user_id):
         tests.append((test.test_id, test.name))
 
-    return render_template("views/teacher_tests.html", tests=tests)
+    return render_template("views/teacher_tests.html", tests=tests, title="Тесты")
 
 
 @views.route("/tests/test")
@@ -99,7 +99,10 @@ def test():
     test = Test.objects(test_id=test_id).first()
 
     return render_template(
-        "views/test.html", test=test, count_questions=len(test.question_array)
+        "views/test.html",
+        test=test,
+        count_questions=len(test.question_array),
+        title=test.name,
     )
 
 
@@ -111,4 +114,16 @@ def student_statistics():
 
     results = []
 
-    return render_template("views/student_statistics.html", results=results)
+    number = 0
+
+    for result in Result.objects:
+        number += 1
+        test_name = Test.objects(test_id=result.test_id).first().name
+        t_count = result.total_count
+        i_count = result.incorrect_count
+        mark = max(2, round((t_count - i_count) / t_count * 5))
+        results.append((number, test_name, t_count, i_count, mark))
+
+    return render_template(
+        "views/student_statistics.html", results=results, title="Статистика"
+    )

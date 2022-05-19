@@ -54,7 +54,7 @@ def login():
 
         if user and user.check_password(password):
             login_user(user, remember=remember)
-            return redirect(url_for("views.profile"))
+            return redirect(url_for("views.index"))
 
         flash("Неверный email или пароль")
         return redirect(url_for("auth.login"))
@@ -65,7 +65,7 @@ def login():
 @auth.route("/signup", methods=["GET", "POST"])
 def signup():
     if current_user.is_authenticated:
-        return redirect(url_for("views.profile"))
+        return redirect(url_for("views.index"))
 
     if request.method == "POST":
         email = request.form.get("email")
@@ -101,7 +101,7 @@ def signup():
 
         login_user(new_user)
 
-        return redirect(url_for("views.profile"))
+        return redirect(url_for("views.index"))
 
     return render_template("auth/signup.html")
 
