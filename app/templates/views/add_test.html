@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block app_content %}
+<div class="container d-flex flex-column align-items-center questions">
+    <h3 class="h3 mt-3 mb-3 fw-normal text-center">Новый тест</h3>
+
+    <div class="form-question">
+        <form class="row g-3" method="POST" action="/add_test">
+            <div class="col-12">
+                <label for="test_name" class="form-label">Название теста</label>
+                <input type="text" class="form-control" name="test_name" id="test_name">
+            </div>
+            <div class="col-12">
+                <label for="section" class="form-label">Секция</label>
+                <input type="text" class="form-control" name="section" id="section">
+            </div>
+            <div class="col-12">
+                <button type="submit" class="btn btn-navy">Создать тест</button>
+            </div>
+    </div>
+
+</div>
+{% endblock %}

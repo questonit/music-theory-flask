@@ -10,7 +10,7 @@ from flask import (
 from flask_login import current_user, login_required
 from mongoengine.errors import NotUniqueError
 from app.auth import check_email
-from app.models import Result, Test, User
+from app.models import Result, Test, User, get_id
 
 views = Blueprint("views", __name__, url_prefix="/")
 
@@ -95,6 +95,9 @@ def teacher_tests():
 @views.route("/tests/test")
 @login_required
 def test():
+    if current_user.role != "teacher":
+        return render_template("views/forbid.html", title="Ошибка"), 403
+
     test_id = request.args.get("id")
     test = Test.objects(test_id=test_id).first()
 
@@ -104,6 +107,37 @@ def test():
         count_questions=len(test.question_array),
         title=test.name,
     )
+
+
+@views.route("/add_test", methods=["GET", "POST"])
+@login_required
+def add_test():
+    if current_user.role != "teacher":
+        return render_template("views/forbid.html", title="Ошибка"), 403
+
+    if request.method == "POST":
+        name = request.form.get("test_name")
+        section = request.form.get("section")
+        teacher_id = current_user.user_id
+        test_id = get_id(Test.objects, "test_id")
+
+        if not (name and section):
+            flash("Не все поля заполнены!")
+            return redirect(url_for("views.add_test"))
+
+        new_test = Test(
+            test_id=test_id,
+            name=name,
+            section=[section],
+            question_array=[],
+            teacher_id=teacher_id,
+        )
+
+        new_test.save()
+        flash("Тест успешно создан!")
+        return redirect(url_for("views.teacher_tests"))
+
+    return render_template("views/add_test.html")
 
 
 @views.route("/student_statistics")
