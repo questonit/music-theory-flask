@@ -1,27 +1,27 @@
 {% extends "base.html" %}
 
 {% block app_content %}
-<h1 class="title">MusicTheory</h1>
-
-{% if current_user.is_authenticated %}
-<a href="{{ url_for('views.profile') }}">
-    Личный кабинет
-</a>
-{% endif %}
-<br>
-{% if not current_user.is_authenticated %}
-<a href="{{ url_for('auth.login') }}">
-    Авторизация
-</a>
-<br>
-<a href="{{ url_for('auth.signup') }}">
-    Регистрация
-</a>
-{% endif %}
-
-{% if current_user.is_authenticated %}
-<a href="{{ url_for('auth.logout') }}">
-    Выйти из аккаунта
-</a>
-{% endif %}
+<div class="container d-flex flex-column form-question">
+    <p align="justify">
+        <img src="https://i.ibb.co/hVCcyZt/1.jpg" class="rounded ms-3 float-end" style="width: 30%;" alt="Мобильное приложение">
+        Music Theory - это электронная система обучения на персональном компьютере и мобильном телефоне. 
+        Система предназначена для изучения теории музыки и ее закрепления на практике - в виде тестов. 
+        <br>
+        <br>
+        На сайте учителя могут создавать тесты и теоретические материалы и редактировать их. Также есть возможность просматривать 
+        результаты своих учеников. 
+        <br>
+        <br>
+        Ученики на сайте могут изучать теоретический материал и смотреть свою статистику. 
+        Для комфортного прохождения тестов предусмотрено мобильное приложение, которое можно скачать по ссылке ниже.
+        <br>
+        <br>
+        Мобильное приложение доступно для системы Android. В приложении ученики могут проходить тесты в интерактивном режиме,
+        открывать новые возможности системы при прохождении тестов.
+    </p>
+    <div class="col-12">
+        <a href="https://github.com/Hvendrix/MusicTheory/releases" role="button" class="btn btn-outline-navy me-2">Скачать приложение</a>
+    </div>
+    
+</div>
 {% endblock %}
