@@ -200,7 +200,6 @@ def result():
         incorrect_count = request.json.get("incorrect_count")
         total_count = request.json.get("total_count")
 
-        print(request.json)
         if (
             Test.objects(test_id=test_id).first()
             and User.objects(user_id=user_id).first()
@@ -245,7 +244,7 @@ def result():
         else:
             return jsonify(result="ERROR", error="Результаты не найдены")
 
-    # все тесты
+    # все результаты
     results = Result.objects
     return jsonify(result="OK", data=json.loads(results.to_json()))
 

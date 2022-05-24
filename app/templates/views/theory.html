@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block app_content %}
+<div class="container d-flex flex-column align-items-center questions">
+    <h3 class="h3 mt-3 mb-3 fw-normal text-center">{{ theory_name }}</h3>
+    <div class="question form-question">
+        <form method="POST" action="/theory_materials/theory">
+            {% if current_user.role == 'teacher' %}
+            <input type="text" name="theory_id" hidden value="{{ theory_id }}">
+            <div class="mb-3">
+                <label for="theory_name" class="form-label">Название статьи</label>
+                <input type="text" class="form-control" id="theory_name" name="theory_name" value="{{ theory_name }}">
+            </div>
+
+            <div class="mb-3">
+                <label for="theory_text" class="form-label">Текст статьи</label>
+                <textarea class="form-control" name="theory_text" id="theory_text"
+                    rows="20">{{ theory_text }}</textarea>
+            </div>
+            <div class="d-grid gap-2 d-md-flex justify-content-md-between">
+                <button class="btn btn-navy btn-save-question" type="submit">Сохранить</button>
+            </div>
+            {% endif %}
+            {% if current_user.role == 'student' %}
+            <div class="mb-3">
+                <textarea readonly class="form-control" style="background-color: transparent" name="theory_text"
+                    rows="20">{{ theory_text }}</textarea>
+            </div>
+            {% endif %}
+        </form>
+    </div>
+</div>
+{% endblock %}

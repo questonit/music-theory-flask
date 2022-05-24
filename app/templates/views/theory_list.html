@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block app_content %}
+<h3 class="h3 mt-3 mb-3 fw-normal text-center">Теория</h3>
+
+<div class="list-group">
+    {%for theory_id, name in theory_list %}
+    <a href="{{ url_for('views.theory') }}?id={{ theory_id }}" class="link-test list-group-item list-group-item-action">{{ name }}</a>
+    {% endfor %}
+</div>
+
+{% if current_user.role == 'teacher' %}
+<a href="{{ url_for('views.theory') }}" role="button" class="btn btn-navy mt-3">Добавить статью</a>
+{% endif %}
+
+
+{% endblock %}

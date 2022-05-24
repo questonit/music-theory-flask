@@ -75,3 +75,12 @@ class Result(db.Document):
 
     incorrect_count = db.IntField()
     total_count = db.IntField()
+
+
+
+class Theory(db.Document):
+    theory_id = db.IntField(required=True, unique=True)
+
+    teacher_id = db.IntField()
+    name = db.StringField()
+    text = db.StringField()

@@ -10,7 +10,7 @@ from flask import (
 from flask_login import current_user, login_required
 from mongoengine.errors import NotUniqueError
 from app.auth import check_email
-from app.models import Result, Test, User, get_id
+from app.models import Result, Test, Theory, User, get_id
 
 views = Blueprint("views", __name__, url_prefix="/")
 
@@ -160,4 +160,69 @@ def student_statistics():
 
     return render_template(
         "views/student_statistics.html", results=results, title="Статистика"
+    )
+
+
+@views.route("/theory_materials")
+@login_required
+def theory_list():
+
+    if current_user.role != "student" and current_user.role != "teacher":
+        return render_template("views/forbid.html", title="Ошибка"), 403
+
+    theory_list = []
+
+    theory_query = Theory.objects(teacher_id=current_user.user_id)
+    if current_user.role == "student":
+        theory_query = Theory.objects
+    for th in theory_query:
+        theory_list.append((th.theory_id, th.name))
+
+    return render_template(
+        "views/theory_list.html", theory_list=theory_list, title="Теория"
+    )
+
+
+@views.route("/theory_materials/theory", methods=["GET", "POST"])
+@login_required
+def theory():
+
+    if current_user.role != "student" and current_user.role != "teacher":
+        return render_template("views/forbid.html", title="Ошибка"), 403
+
+    if request.method == "POST":
+        theory_id = request.form.get("theory_id")
+        name = request.form.get("theory_name")
+        text = request.form.get("theory_text")
+
+        if theory_id:
+            th = Theory.objects(theory_id=theory_id).first()
+            th.name = name
+            th.text = text
+            th.save()
+        else:
+            theory_id = get_id(Theory.objects, "theory_id")
+            new_th = Theory(theory_id=theory_id, name=name, text=text, teacher_id=current_user.user_id)
+            new_th.save()
+
+        flash("Теория сохранена!")
+        return redirect(url_for("views.theory_list"))
+
+    theory_id = request.args.get("id")
+
+    if theory_id:
+        th = Theory.objects(theory_id=theory_id).first()
+        theory_name = th.name
+        theory_text = th.text
+
+    else:
+        theory_id = ""
+        theory_name = ""
+        theory_text = ""
+
+    return render_template(
+        "views/theory.html",
+        theory_id=theory_id,
+        theory_name=theory_name,
+        theory_text=theory_text,
     )
