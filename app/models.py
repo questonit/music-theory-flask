@@ -1,11 +1,4 @@
-from flask_login import (
-    LoginManager,
-    UserMixin,
-    login_required,
-    login_user,
-    current_user,
-    logout_user,
-)
+from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
 
 from .db import db
@@ -75,7 +68,6 @@ class Result(db.Document):
 
     incorrect_count = db.IntField()
     total_count = db.IntField()
-
 
 
 class Theory(db.Document):
