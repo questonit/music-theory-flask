@@ -4,8 +4,12 @@
 <h3 class="h3 mt-3 mb-3 fw-normal text-center">Ваши тесты</h3>
 
 <div class="list-group">
-    {%for test_id, name in tests %}
+    {%for test_id, name, test_active in tests %}
+    {% if test_active == 1 %}
     <a href="{{ url_for('views.test') }}?id={{ test_id }}" class="link-test list-group-item list-group-item-action">{{ name }}</a>
+    {% else %}
+    <a href="{{ url_for('views.test') }}?id={{ test_id }}" class="link-test list-group-item list-group-item-action" style="background-color: #ffff00;">{{ name }}</a>
+    {% endif %}
     {% endfor %}
 </div>
 

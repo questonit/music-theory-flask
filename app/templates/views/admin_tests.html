@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block app_content %}
+<main>
+    <h3 class="h3 mt-3 mb-3 fw-normal text-center">Тесты</h3>
+
+    <div>
+        <table class="table table-striped table-hover">
+            <thead class="text-white" style="background-color: #FB8C5C">
+                <tr>
+                    <th scope="col">№</th>
+                    <th scope="col">Название</th>
+                    <th scope="col">Учитель</th>
+                    <th scope="col"></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for number, test_id, name, teacher_name, test_active in tests %}
+                {% if test_active == 0 %}
+                <tr class="table-warning" style="vertical-align:middle">
+                    {% else %}
+                <tr style="vertical-align:middle">
+                    {% endif %}
+                    <th scope="row">{{number}}</th>
+                    <td><a href="{{ url_for('views.test') }}?id={{ test_id }}" class="">{{ name }}</a></td>
+                    <td>{{ teacher_name }}</td>
+
+                    <td style="width:180px">
+                        {% if test_active == 0 %}
+                        <form class="align-items-center" method="POST" action="/accept_test">
+                            <input type="hidden" name="test_id" value="{{ test_id }}" />
+                            <button type="submit" class="btn  btn-sm btn-orange" style="line-height:1">Подтвердить
+                                тест</button>
+                        </form>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+
+        </table>
+    </div>
+</main>
+{% endblock %}

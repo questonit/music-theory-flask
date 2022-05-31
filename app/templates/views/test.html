@@ -36,15 +36,18 @@
                         <input type="text" class="answer-text form-control" name="answer_{{loop.index0}}" value="{{ answer }}">
                     </div>
                     {% endfor %}
-
+                    {% if current_user.role != "admin"%}
                     <button type="button" class="btn btn-add-answer btn-sm btn-navy" style="line-height:1">Добавить ответ</button>
+                    {% endif %}
 
                 </div>
             </fieldset>
+            {% if current_user.role != "admin"%}
             <div class="d-grid gap-2 d-md-flex justify-content-md-between">
                 <button class="btn btn-navy btn-save-question" type="submit" disabled>Сохранить</button>
                 <button class="btn btn-orange btn-edit-question" type="button">Редактировать</button>
             </div>
+            {% endif %}
         </form>
 
     </div>
@@ -91,9 +94,11 @@
     </div>
 
 </div>
+{% if current_user.role != "admin"%}
 <div class="container d-grid gap-2 d-md-flex justify-content-md-start" style="width:70%">
     <button class="btn btn-outline-navy js-add-question" type="button">Добавить вопрос</button>
 </div>
+{% endif %}
 {% endblock %}
 
 {% block scripts%}

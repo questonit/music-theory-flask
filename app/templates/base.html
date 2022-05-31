@@ -15,6 +15,7 @@
 
                 {% if current_user.role == 'admin' %}
                 <li><a href="{{ url_for('views.admin_users') }}" class="nav-link px-2 text-white">Пользователи</a></li>
+                <li><a href="{{ url_for('views.admin_tests') }}" class="nav-link px-2 text-white">Тесты</a></li>
                 {% elif current_user.role == 'teacher' %}
                 <li><a href="{{ url_for('views.theory_list') }}" class="nav-link px-2 text-white">Теория</a></li>
                 <li><a href="{{ url_for('views.teacher_tests') }}" class="nav-link px-2 text-white">Тесты</a></li>

@@ -50,6 +50,7 @@ class Test(db.Document):
     section = db.ListField(db.StringField())
     question_array = db.ListField(db.DictField())
     teacher_id = db.IntField()
+    active = db.IntField()
 
 
 class Result(db.Document):
